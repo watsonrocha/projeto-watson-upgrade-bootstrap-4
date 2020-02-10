@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Clientes";
+}
+@section scripts{
+<script>
+    var urlAlteracao = '@Url.Action("Alterar", "Cliente", new { area = "" })';
+    var urlClienteList = '@Url.Action("ClienteList", "Cliente", new { area = "" })';
+
+</script>
+    @Scripts.Render("~/bundles/listClientes")
+}
+<div class="form-row">
+    <h2>@Html.Raw(ViewBag.Title)</h2>
+    <hr />
+    <div class="col-auto my-1">
+
+    @Html.ActionLink("Novo Cliente", "Incluir", "Cliente", new { }, new { @class = "btn btn-primary" })
+    </div>
+</div>
+
+<table id="gridClientes" class="table"></table>

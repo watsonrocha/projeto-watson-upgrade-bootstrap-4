@@ -1,0 +1,91 @@
+﻿@model WebAtividadeEntrevista.Models.ClienteModel
+@{
+    ViewBag.Title = "Alterar Cliente";
+}
+
+<h2>@Html.Raw(ViewBag.Title)</h2>
+@Html.HiddenFor(model => model.Id)
+
+@Html.Partial("Forms")
+
+
+<div id="myModal" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="myModalContent"></div>
+        </div>
+    </div>
+</div>
+
+
+<div id="replacetarget">
+    @Html.Partial("_BeneficiariosList", Model.Beneficiarios)
+</div>
+
+
+@*@section scripts{
+        <script>
+            var urlPost = '@Url.Action("Alterar", "Cliente", new { area = "" })';
+            var obj = @Html.Raw(Json.Encode(Model));
+            var urlRetorno = '@Url.Action("Index", "Cliente", new { area = "" })';
+        </script>
+        @Scripts.Render("~/bundles/altClientes")
+    }*@
+
+
+<div id="myModal"  class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div id="myModalContent"></div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        var urlPost = '@Url.Action("Alterar", "Cliente", new { area = "" })';
+        var obj = @Html.Raw(Json.Encode(Model));
+        var urlRetorno = '@Url.Action("Index", "Cliente", new { area = "" })';
+    </script>
+    @Scripts.Render("~/bundles/altClientes")
+
+    <script>
+        $(function () {
+            $.ajaxSetup({ cache: false });
+
+            $("a[data-modal]").on("click", function (e) {
+                $('#myModalContent').load(this.href, function () {
+                    $('#myModal').modal({
+                        /*backdrop: 'static',*/
+                        keyboard: true
+                    }, 'show');
+                    bindForm(this);
+                });
+                return false;
+            });
+        });
+
+        function bindForm(dialog) {
+            console.log(dialog);
+            $('form', dialog).submit(function () {
+                $.ajax({
+                    url: this.action,
+                    type: this.method,
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        if (result.success) {
+                            $('#myModal').modal('hide');
+                            $('#replacetarget').load(result.url); // Carrega o resultado HTML para a div demarcada
+                        } else {
+                            $('#myModalContent').html(result);
+                            bindForm(dialog);
+                        }
+                    }
+                });
+                return false;
+            });
+        }
+    </script>
+
+}
